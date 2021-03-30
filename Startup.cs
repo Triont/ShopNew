@@ -1,9 +1,13 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NewShopApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +28,19 @@ namespace NewShopApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddMvc();
+            services.AddSession();
+            services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationContext>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
+
+            {
+                opt.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                opt.LogoutPath = new Microsoft.AspNetCore.Http.PathString("/Account/Logout");
+            }
+     );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,7 +61,9 @@ namespace NewShopApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+          //  app.CreatePerOwinContext<SignInManager>(ApplicationSignInManager.Create);
 
             app.UseEndpoints(endpoints =>
             {
