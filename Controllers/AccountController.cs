@@ -10,11 +10,13 @@ namespace CustomIdentityApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
         [HttpGet]
         public IActionResult Register()
@@ -33,6 +35,12 @@ namespace CustomIdentityApp.Controllers
                 {
                     // установка куки
                     await _signInManager.SignInAsync(user, false);
+                    IdentityRole identityRole = new IdentityRole();
+                    identityRole.Name = "Admin";
+                    identityRole.NormalizedName = "ADMIN";
+                    IdentityRole identity = new IdentityRole("User");
+                await    _roleManager.CreateAsync(identityRole);
+                //   await _userManager.AddToRoleAsync(user, "Admin");
                     return RedirectToAction("Index", "Home");
                 }
                 else

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NewShopApp.Models;
@@ -17,16 +18,19 @@ namespace NewShopApp.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationContext applicationContext;
         private readonly IWebHostEnvironment hostingEnvironment;
-        public HomeController(ILogger<HomeController> logger, ApplicationContext applicationContext)
+        public HomeController(ILogger<HomeController> logger, ApplicationContext applicationContext, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             this.applicationContext = applicationContext;
+            hostingEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
+      //  [Authorize(Roles ="Admin")]
         public async Task<IActionResult> CreateItem(CreateItem item)
         {
 

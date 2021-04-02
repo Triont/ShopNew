@@ -75,3 +75,6 @@ C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\NewShopApp.dll
 C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\ref\NewShopApp.dll
 C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\NewShopApp.pdb
 C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\NewShopApp.genruntimeconfig.cache
+C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Item\Create.cshtml.g.cs
+C:\Users\user\source\repos\NewShopApp\NewShopApp\bin\Debug\net5.0\Humanizer.dll
+C:\Users\user\source\repos\NewShopApp\NewShopApp\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
