@@ -7,5 +7,7 @@ namespace NewShopApp.ModelView
 {
     public class ProductsShowModelView
     {
+
+
     }
 }

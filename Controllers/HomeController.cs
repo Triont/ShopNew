@@ -31,6 +31,11 @@ namespace NewShopApp.Controllers
         }
 
       //  [Authorize(Roles ="Admin")]
+
+        public void d()
+        {
+           
+        }
         public async Task<IActionResult> CreateItem(CreateItem item)
         {
 
