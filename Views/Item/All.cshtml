@@ -19,9 +19,10 @@
     
       <th scope="col">Id</th>
       <th scope="col">Name</th>
-       <th scope="col">Price</th>
-        <th scope="col">Count</th>
+       <th scope="col">Count</th>
+        <th scope="col">Price</th>
         <th scope="col">Image</th>
+        <th scope="col"></th>
   
     </tr>
   </thead>
@@ -31,8 +32,8 @@
           
                <tr>
                    
-                   <td> @i.Name</td>
-                   <td>@i.Price</td>
+                   <td> @i.Id</td>
+                   <td>@i.Name</td>
                  
                       @if(@i.Quantity==0)
                       {
@@ -49,6 +50,10 @@
                             }
 
                         <td>
+                            @i.Price
+                        </td>
+                            <td>
+                            
                    @*   <img src="upload/@i.Key.Image" />*@
                     <img class="img" src="/uploads/@Url.Content(i.Image)" height="64" width="64" />                    
                       </td>

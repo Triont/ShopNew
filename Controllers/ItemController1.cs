@@ -106,14 +106,13 @@ namespace NewShopApp.Controllers
                 {
                     if (itemToRemove != null)
                     {
-                        if (cart.Products.Contains(itemToRemove))
-                        {
-                            cart.TotalPrice -= itemToRemove.Price;
-                            cart.Products.Remove(itemToRemove);
+                        var itemInList = cart.Products.Find(x => x.Id == itemToRemove.Id);
+                            cart.TotalPrice -= itemInList.Price;
+                            cart.Products.Remove(itemInList);
                             string result = JsonConvert.SerializeObject(cart);
                             HttpContext.Session.SetString("Cart", result);
                             await HttpContext.Session.CommitAsync();
-                        }
+                        
                     }
                 }
             }

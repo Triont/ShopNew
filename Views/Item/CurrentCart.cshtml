@@ -20,7 +20,9 @@
     
       <th scope="col">Id</th>
       <th scope="col">Name</th>
+      <th scope="col">Image</th>
        <th scope="col">Price</th>
+       
      
   
     </tr>
@@ -33,6 +35,9 @@
                    
                    <td> @i.Id</td>
                    <td>@i.Name</td>
+                   <td>
+                        <img class="img" src="/uploads/@Url.Content(@i.Image)" height="64" width="64" />   
+                   </td>
                      <td>@i.Price</td>
                     <td>@Html.ActionLink("Remove", "RemoveFromCart","Item", new {id=@i.Id})</td>
                   
@@ -45,7 +50,9 @@
         }
         <tr>
             <td>Total price</td>
-            <td></td>
+            <td>
+                
+            </td>
             <td>@Model.TotalPrice</td>
         </tr>
 
