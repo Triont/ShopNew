@@ -54,9 +54,10 @@
                       </td>
                       <td>
                           <form asp-controller="Item" asp-action="AddToCart">
-                               <input type="hidden" name="ItemId" value="@i.Id" />
+                               <input type="hidden" name="ProductId" value="@i.Id" />
                               <input type="submit" value="Buy" />
                           </form>
+                          @* <td>@Html.ActionLink("Buy", "AddToCart","Item", new {id=@i.Id})</td>*@
                       </td>
 
                 

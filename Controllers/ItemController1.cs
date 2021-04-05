@@ -32,6 +32,7 @@ namespace NewShopApp.Controllers
         {
             return View();
         }
+   
         public async Task<IActionResult> AddToCart(long ProductId)
         {
             Cart cart = new Cart();
@@ -47,16 +48,25 @@ namespace NewShopApp.Controllers
             {
                 if (cart != null)
                 {
-                    
-                    cart.Products.Add(product);
-                    cart.TotalPrice += product.Price;
+                    if (cart.Products != null)
+                    {
+
+                        cart.Products.Add(product);
+                        cart.TotalPrice += product.Price;
+                    }
+                    else
+                    {
+                        cart.Products = new List<Product>();
+                        cart.Products.Add(product);
+                        cart.TotalPrice = product.Price;
+                    }
                 }
-                else
-                {
+                //else
+                //{
                    
-                    cart.Products.Add(product);
-                    cart.TotalPrice = product.Price;
-                }
+                //    cart.Products.Add(product);
+                //    cart.TotalPrice = product.Price;
+                //}
                 string cartValue = JsonConvert.SerializeObject(cart);
                 HttpContext.Session.SetString("Cart", cartValue);
                 await HttpContext.Session.CommitAsync();
