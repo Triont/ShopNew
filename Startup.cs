@@ -29,7 +29,12 @@ namespace NewShopApp
         {
             services.AddControllersWithViews();
             services.AddMvc();
-            services.AddSession();
+            services.AddDistributedMemoryCache();
+            services.AddSession(opt =>
+            {
+                opt.IdleTimeout = TimeSpan.FromHours(3);
+                opt.Cookie.IsEssential = true;
+            });
             services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>()

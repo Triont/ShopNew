@@ -53,7 +53,7 @@
                     <img class="img" src="/uploads/@Url.Content(i.Image)" height="64" width="64" />                    
                       </td>
                       <td>
-                          <form asp-controller="Home" asp-action="AddToCart">
+                          <form asp-controller="Item" asp-action="AddToCart">
                                <input type="hidden" name="ItemId" value="@i.Id" />
                               <input type="submit" value="Buy" />
                           </form>

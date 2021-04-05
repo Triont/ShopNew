@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace NewShopApp.Controllers
 {
@@ -26,21 +27,88 @@ namespace NewShopApp.Controllers
         {
             return View();
         }
-        [Authorize(Roles ="Admin")]
+       // [Authorize(Roles ="Admin")]
         public IActionResult Create()
         {
             return View();
         }
-        public async Task<IActionResult> AddToCart(List<Product> products)
+        public async Task<IActionResult> AddToCart(long ProductId)
         {
             Cart cart = new Cart();
-            if(products.Count==1)
+            if (HttpContext.Session.GetString("Cart")!=null)
             {
-                cart.Products.Add(products[0]);
-                cart.TotalPrice = products[0].Price;
-                 JsonSerializer.Serialize(cart);
+                cart  = JsonConvert.
+                    DeserializeObject<Cart>(HttpContext.Session.GetString("Cart"));
             }
+            var product = await applicationContext.
+                Products.FirstOrDefaultAsync(i => i.Id == ProductId);
+         
+            if(product!=null)
+            {
+                if (cart != null)
+                {
+                    
+                    cart.Products.Add(product);
+                    cart.TotalPrice += product.Price;
+                }
+                else
+                {
+                   
+                    cart.Products.Add(product);
+                    cart.TotalPrice = product.Price;
+                }
+                string cartValue = JsonConvert.SerializeObject(cart);
+                HttpContext.Session.SetString("Cart", cartValue);
+                await HttpContext.Session.CommitAsync();
+
+                
+            }
+
+
+            
+            //if(products.Count==1)
+            //{
+            //    cart.Products.Add(products[0]);
+            //    cart.TotalPrice = products[0].Price;
+            //     JsonSerializer.Serialize(cart);
+            //}
             return RedirectToAction("All");
+        }
+        public IActionResult CurrentCart()
+        {
+            string json_cart = HttpContext.Session.GetString("Cart");
+            Cart cart = new Cart();
+            if (json_cart != null)
+            {
+                 cart = JsonConvert.DeserializeObject<Cart>(json_cart);
+            }
+            return View(cart);
+        }
+        public async Task<IActionResult> RemoveFromCart(long id)
+        {
+            string str = HttpContext.Session.GetString("Cart");
+            var cart = JsonConvert.DeserializeObject<Cart>(str);
+            var itemToRemove = await applicationContext.
+                Products.FirstOrDefaultAsync(i => i.Id == id);
+            if(cart!=null)
+            {
+                if(cart.Products!=null)
+                {
+                    if (itemToRemove != null)
+                    {
+                        if (cart.Products.Contains(itemToRemove))
+                        {
+                            cart.TotalPrice -= itemToRemove.Price;
+                            cart.Products.Remove(itemToRemove);
+                            string result = JsonConvert.SerializeObject(cart);
+                            HttpContext.Session.SetString("Cart", result);
+                            await HttpContext.Session.CommitAsync();
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("CurrentCart");
+            
         }
         public async Task<IActionResult> All()
         {

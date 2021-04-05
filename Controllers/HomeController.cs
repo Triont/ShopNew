@@ -53,7 +53,9 @@ namespace NewShopApp.Controllers
                     Directory.CreateDirectory(uploads);
                 }
                 var filePath = Path.Combine(uploads, uniqueFileName);
-                item.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                FileStream fileStream = new FileStream(filePath, FileMode.Create);
+                item.Image.CopyTo(fileStream);
+                fileStream.Close();
 
                 item1.Image = uniqueFileName;
               await  applicationContext.Products.AddAsync(item1);
