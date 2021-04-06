@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NewShopApp.Services;
 using Microsoft.Extensions.Hosting;
 using NewShopApp.Models;
 using System;
@@ -38,7 +39,8 @@ namespace NewShopApp
             services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationContext>();
+    .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
+            services.AddTransient<EmailSendService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
 
             {

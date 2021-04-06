@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using NewShopApp.ModelView;
 using NewShopApp.Models;
+using NewShopApp.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CustomIdentityApp.Controllers
 {
@@ -11,12 +13,16 @@ namespace CustomIdentityApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly EmailSendService emailSendService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager,
+            EmailSendService emailSendService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            this.emailSendService = emailSendService;
         }
         [HttpGet]
         public IActionResult Register()
@@ -40,7 +46,13 @@ namespace CustomIdentityApp.Controllers
                     identityRole.NormalizedName = "ADMIN";
                     IdentityRole identity = new IdentityRole("User");
                 await    _roleManager.CreateAsync(identityRole);
-                //   await _userManager.AddToRoleAsync(user, "Admin");
+                    //   await _userManager.AddToRoleAsync(user, "Admin");
+
+
+                    var c = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callback = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, code = c }, protocol: HttpContext.Request.Scheme);
+                    await EmailSendService.SendEmailAsync(model.Email, "Confirm your account",
+                     $"Confirm registration : <a href='{callback}'>link</a>");
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -51,9 +63,29 @@ namespace CustomIdentityApp.Controllers
                     }
                 }
             }
+
             return View(model);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return RedirectToAction("Index", "Home");
+            else
+                return View("Error");
+        }
         [HttpGet]
         public IActionResult Login(string returnUrl = null)
         {
