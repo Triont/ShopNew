@@ -46,7 +46,7 @@ namespace CustomIdentityApp.Controllers
                     identityRole.NormalizedName = "ADMIN";
                     IdentityRole identity = new IdentityRole("User");
                 await    _roleManager.CreateAsync(identityRole);
-                    //   await _userManager.AddToRoleAsync(user, "Admin");
+                      await _userManager.AddToRoleAsync(user, "Admin");
 
 
                     var c = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -119,6 +119,8 @@ namespace CustomIdentityApp.Controllers
                     ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }
             }
+
+            
             return View(model);
         }
 

@@ -27,7 +27,7 @@ namespace NewShopApp.Controllers
         {
             return View();
         }
-       // [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         public IActionResult Create()
         {
             return View();

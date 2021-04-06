@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NewShopApp.Controllers
@@ -27,6 +28,8 @@ namespace NewShopApp.Controllers
 
         public IActionResult Index()
         {
+         //   var s = User.FindFirst(ClaimTypes.Email)?.Value;
+            
             return View();
         }
 
