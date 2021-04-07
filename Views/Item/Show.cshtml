@@ -6,3 +6,25 @@
 @model NewShopApp.Models.Product;
 @{
 }
+<div>
+             <img class="img" src="/uploads/@Url.Content(Model.Image)" height="256" width="256" />
+         @Model.Name
+         <br />
+         <label>Price</label>
+             @Model.Price
+             <br />
+             @if(Model.Quantity>0)
+             {
+                    <form asp-controller="Item" asp-action="AddToCart">
+                               <input type="hidden" name="ProductId" value="@Model.Id" />
+                              <input type="submit" value="Buy" />
+                          </form>
+             }
+             <br />
+             @Model.Quantity
+             <br />
+             @Model.Description
+             <br />
+
+
+</div>

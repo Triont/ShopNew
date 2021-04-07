@@ -52,7 +52,7 @@ namespace CustomIdentityApp.Controllers
                     var c = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callback = Url.Action("ConfirmEmail", "Account", new { UserId = user.Id, code = c }, protocol: HttpContext.Request.Scheme);
                     await EmailSendService.SendEmailAsync(model.Email, "Confirm your account",
-                     $"Confirm registration : <a href='{callback}'>link</a>");
+                     $"Confirm registration : <a href='{callback}'> link </a>");
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -116,7 +116,7 @@ namespace CustomIdentityApp.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
+                    ModelState.AddModelError("", "Incrorrect login and(or) password");
                 }
             }
 

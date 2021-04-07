@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace NewShopApp.Controllers
 {
 
-  //  [Authorize]
+    //  [Authorize]
     public class ItemController : Controller
     {
         private readonly ApplicationContext applicationContext;
@@ -27,10 +27,20 @@ namespace NewShopApp.Controllers
         {
             return View();
         }
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Show(long id)
+        {
+            var item=await applicationContext.Products.FirstOrDefaultAsync(i => i.Id==id);
+            if(item!=null)
+            {
+                return View(item);
+            }
+            return Redirect("~/Shared/Error");
         }
    
         public async Task<IActionResult> AddToCart(long ProductId)
@@ -75,7 +85,7 @@ namespace NewShopApp.Controllers
             }
 
 
-            
+           
             //if(products.Count==1)
             //{
             //    cart.Products.Add(products[0]);
