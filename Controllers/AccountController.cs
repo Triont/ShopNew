@@ -67,6 +67,51 @@ namespace CustomIdentityApp.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordByEmail(ResetPassword resetPassword)
+        {
+            if (ModelState.IsValid)
+            {
+                var q = await _userManager.FindByEmailAsync(resetPassword.Email);
+                if (q != null)
+                {
+                    var t = await _userManager.GeneratePasswordResetTokenAsync(q);
+                    var callback = Url.Action("NewPasswordSet", "Account", new { UserId = q.Id, code = q }, protocol: HttpContext.Request.Scheme);
+                    await EmailSendService.SendEmailAsync(q.Email, "Reset password", callback);
+                    return RedirectToAction("Login");
+                }
+            }
+            return RedirectToAction("Forgotten");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult NewPasswordSet(string token =null)
+        {
+            return token == null ? View("Error") : View();
+
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewPasswordSet(PassNew passNew)
+        {
+            var user = await _userManager.FindByEmailAsync(passNew.Email); 
+           var result= await _userManager.ResetPasswordAsync(user, passNew.token, passNew.Pass);
+            if(result.Succeeded)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                return Redirect("~Shared/Error");
+            }
+        }
+        public IActionResult Forgotten()
+        {
+            return View();
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)

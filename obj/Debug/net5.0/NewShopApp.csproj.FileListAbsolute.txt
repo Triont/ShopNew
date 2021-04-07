@@ -84,3 +84,5 @@ C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\It
 C:\Users\user\source\repos\NewShopApp\NewShopApp\bin\Debug\net5.0\MailKit.dll
 C:\Users\user\source\repos\NewShopApp\NewShopApp\bin\Debug\net5.0\MimeKit.dll
 C:\Users\user\source\repos\NewShopApp\NewShopApp\bin\Debug\net5.0\BouncyCastle.Crypto.dll
+C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Account\Forgotten.cshtml.g.cs
+C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Account\NewPasswordSet.cshtml.g.cs
