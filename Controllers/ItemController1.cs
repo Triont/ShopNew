@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using NewShopApp.ModelView;
 using Newtonsoft.Json;
 
 namespace NewShopApp.Controllers
@@ -32,7 +33,7 @@ namespace NewShopApp.Controllers
         {
             return View();
         }
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> Show(long id)
         {
             var item=await applicationContext.Products.FirstOrDefaultAsync(i => i.Id==id);
@@ -40,9 +41,16 @@ namespace NewShopApp.Controllers
             {
                 return View(item);
             }
-            return Redirect("~/Shared/Error");
+            return RedirectToAction("NotFoundError", new { message=" Page not found" });
         }
-   
+        public ActionResult NotFoundError(string message)
+        {
+            ErModelView erModelView = new ErModelView();
+            erModelView.Message = message;
+            ViewBag.Message = message;
+            return View(erModelView);
+        }
+
         public async Task<IActionResult> AddToCart(long ProductId)
         {
             Cart cart = new Cart();
