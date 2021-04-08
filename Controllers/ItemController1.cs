@@ -139,8 +139,35 @@ namespace NewShopApp.Controllers
         }
         public async Task<IActionResult> All()
         {
+            if (TempData["SelectedCategory"] == null)
+            {
+                var q = await applicationContext.Products.ToListAsync();
+                var categories = q.Select(i => i.Category).Distinct().ToList();
+                TempData["Categories"] = categories;
+                return View(q);
+            }
+            else
+            {
+                try
+                {
+                    var qq= (List<string>)TempData["SelectedCategory"];
+                    return View(qq);
+                }
+                catch(InvalidCastException e)
+                {
+                    
+                }
+            }
+            return View();
+           
+        }
+        public async Task<IActionResult> CategorySelect(string Name)
+        {
             var q = await applicationContext.Products.ToListAsync();
-            return View(q);
+          var lst=  q.Select((i => i.Category == Name)).ToList();
+            TempData["SelectedCategory"] = lst;
+            return RedirectToAction("All");
+
         }
     }
 }

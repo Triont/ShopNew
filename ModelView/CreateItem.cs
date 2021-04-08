@@ -13,5 +13,6 @@ namespace NewShopApp.ModelView
         public decimal Price { get; set; }
         public IFormFile Image { get; set; }
         public int Quantity { get; set; }
+        public string Category { get; set; }
     }
 }

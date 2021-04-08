@@ -5,10 +5,22 @@
 @using NewShopApp.ModelView;
 @model List<Product>
 @{
+    List<string> str = (List<string>)TempData["Categories"];
 }
 <html>
     <body>
-        
+       <div>
+           <form asp-action="CategorySelect" asp-controller="Item">
+             @foreach(var i in str)
+             {
+                     <p><input type="checkbox" name="@i" value="@i" checked>@i<Br>
+  </p>
+          
+ 
+             }
+               <input type="submit" value="Confirm">
+               </form>
+       </div> 
 <div class ="table">
 <div align="center">
     @if(Model!=null)
