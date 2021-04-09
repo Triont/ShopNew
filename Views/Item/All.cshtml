@@ -3,9 +3,11 @@
 *@
 @using NewShopApp.Models;
 @using NewShopApp.ModelView;
-@model List<Product>
+@using Newtonsoft.Json;
+@using Newtonsoft;
+@model ShowItemsModelView
 @{
-    List<string> str = (List<string>)TempData["Categories"];
+    List<string> str = JsonConvert.DeserializeObject<List<string>>( TempData["Categories"].ToString());
 }
 <html>
     <body>
@@ -13,8 +15,12 @@
            <form asp-action="CategorySelect" asp-controller="Item">
              @foreach(var i in str)
              {
-                     <p><input type="checkbox" name="@i" value="@i" checked>@i<Br>
-  </p>
+                 if(i!=null)
+                 {
+                     <label asp-for="Category">@i</label>
+                     <input asp-for="Category" name="Categories" type="checkbox" value="@i" />
+                  }
+  
           
  
              }
@@ -39,7 +45,7 @@
     </tr>
   </thead>
         
-        @foreach(var i in Model)
+        @foreach(var i in Model.Products)
         {
           
                <tr>

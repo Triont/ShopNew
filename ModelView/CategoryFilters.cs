@@ -8,9 +8,11 @@ using NewShopApp.ModelView;
 
 namespace NewShopApp.ModelView
 {
-    public class CategoryListShow
+    public class ShowItemsModelView
     {
-        public List<string> Categories { get; set; }
+        public List<Product> Products { get; set; }
+        public string Category { get; set; }
+      //  public List<string> Categories { get; set; }
         //private readonly ApplicationContext applicationContext;
         //public CategoryList(ApplicationContext applicationContext)
         //{

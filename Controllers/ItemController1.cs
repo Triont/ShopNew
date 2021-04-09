@@ -139,19 +139,27 @@ namespace NewShopApp.Controllers
         }
         public async Task<IActionResult> All()
         {
+            ShowItemsModelView showItemsModelView = new ShowItemsModelView();
+            var q = await applicationContext.Products.ToListAsync();
+            showItemsModelView.Products = q;
+            
+            var categories = q.Select(i => i.Category).Distinct().ToList();
+            TempData["Categories"] = JsonConvert.SerializeObject(categories);
             if (TempData["SelectedCategory"] == null)
             {
-                var q = await applicationContext.Products.ToListAsync();
-                var categories = q.Select(i => i.Category).Distinct().ToList();
-                TempData["Categories"] = categories;
-                return View(q);
+                //var q = await applicationContext.Products.ToListAsync();
+                //var categories = q.Select(i => i.Category).Distinct().ToList();
+               // TempData["Categories"] = categories;
+                return View(showItemsModelView);
             }
             else
             {
                 try
                 {
-                    var qq= (List<string>)TempData["SelectedCategory"];
-                    return View(qq);
+                    var zzz = TempData["SelectedCategory"].ToString();
+                    var tmp = JsonConvert.DeserializeObject < List<Product>>(zzz);
+                    showItemsModelView.Products = tmp;
+                    return View(showItemsModelView);
                 }
                 catch(InvalidCastException e)
                 {
@@ -161,11 +169,18 @@ namespace NewShopApp.Controllers
             return View();
            
         }
-        public async Task<IActionResult> CategorySelect(string Name)
+
+        public async Task<IActionResult> CategorySelect(string[]Categories)
         {
             var q = await applicationContext.Products.ToListAsync();
-          var lst=  q.Select((i => i.Category == Name)).ToList();
-            TempData["SelectedCategory"] = lst;
+            List<Product> tmp = new List<Product>();
+            foreach (var iq in Categories)
+            {
+                var lst = q.Select((i => i)).Where(k => k.Category == iq).ToList();
+                tmp.AddRange(lst);
+               
+            }
+            TempData["SelectedCategory"] = JsonConvert.SerializeObject(tmp);
             return RedirectToAction("All");
 
         }

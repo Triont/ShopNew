@@ -44,6 +44,7 @@ namespace NewShopApp.Controllers
 
             Product item1 = new Product();
             item1.Name = item.Name;
+            item1.Category = item.Category;
             item1.Price = item.Price;
             item1.Description = item.Description;
             if (item.Image != null)
