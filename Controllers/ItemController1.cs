@@ -72,6 +72,13 @@ namespace NewShopApp.Controllers
 
                     await orderDbContext.AddAsync(order);
                     await orderDbContext.SaveChangesAsync();
+                    if(User.Identity.IsAuthenticated)
+                    {
+                     var name=   User.FindFirst(ClaimTypes.Name)?.Value;
+                        var user = await _userManager.FindByNameAsync(name);
+                        user.CartList = String.Empty;
+                        await _userManager.UpdateAsync(user);
+                    }
                     HttpContext.Session.SetString("Cart", String.Empty);
                 }
             }
