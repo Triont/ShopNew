@@ -12,6 +12,8 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using NewShopApp.ModelView;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace NewShopApp.Controllers
 {
@@ -20,9 +22,61 @@ namespace NewShopApp.Controllers
     public class ItemController : Controller
     {
         private readonly ApplicationContext applicationContext;
-        public ItemController(ApplicationContext applicationContext)
+        private readonly OrderDbContext orderDbContext;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ItemController(ApplicationContext applicationContext, UserManager<ApplicationUser> userManager,
+            OrderDbContext orderDbContext)
         {
             this.applicationContext = applicationContext;
+            _userManager = userManager;
+            this.orderDbContext = orderDbContext;
+        }
+       [HttpGet]
+        public IActionResult  OrderCreate()
+        {
+        var cart=JsonConvert.DeserializeObject<Cart>(    HttpContext.Session.GetString("Cart"));
+            string items = JsonConvert.SerializeObject(cart.Products);
+          //  string price = JsonConvert.SerializeObject(cart.TotalPrice);
+            if(User.Identity.IsAuthenticated)
+            {
+                //
+            }
+            OrderCreateViewModel orderCreateViewModel = new OrderCreateViewModel();
+            orderCreateViewModel.Items = items;
+            orderCreateViewModel.TotalPrice = cart.TotalPrice;
+            return View(orderCreateViewModel);
+          
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> OrderCreate(OrderCreateViewModel orderCreateViewModel)
+        {
+            
+            if(orderCreateViewModel!=null)
+            {
+                if (ModelState.IsValid)
+                {
+                    Order order = new Order()
+                    {
+                        TotalPrice = orderCreateViewModel.TotalPrice,
+                        Address = orderCreateViewModel.Address,
+                        City = orderCreateViewModel.City,
+                        Country = orderCreateViewModel.Country,
+                        Phone = orderCreateViewModel.Phone,
+                        Email = orderCreateViewModel.Email,
+                        Name = orderCreateViewModel.Name,
+                        OrderItems = orderCreateViewModel.Items,
+                        SecondName = orderCreateViewModel.SecondName
+
+                    };
+
+                    await orderDbContext.AddAsync(order);
+                    await orderDbContext.SaveChangesAsync();
+                    HttpContext.Session.SetString("Cart", String.Empty);
+                }
+            }
+            return RedirectToAction("Index", "Home");
+           
         }
         public IActionResult Index()
         {
@@ -87,6 +141,14 @@ namespace NewShopApp.Controllers
                 //}
                 string cartValue = JsonConvert.SerializeObject(cart);
                 HttpContext.Session.SetString("Cart", cartValue);
+                if(User.Identity.IsAuthenticated)
+                {
+                  var r=  User.FindFirst(ClaimTypes.Name)?.Value;
+                    var user = await _userManager.FindByNameAsync(r);
+                    user.CartList = cartValue;
+                  await  _userManager.UpdateAsync(user);
+                    
+                }    
                 await HttpContext.Session.CommitAsync();
 
                 
@@ -102,13 +164,24 @@ namespace NewShopApp.Controllers
             //}
             return RedirectToAction("All");
         }
-        public IActionResult CurrentCart()
+        [Route("CurrentCart")]
+        [Route("{controller}/CurrentCart")]
+        public async Task<IActionResult> CurrentCart()
         {
             string json_cart = HttpContext.Session.GetString("Cart");
             Cart cart = new Cart();
             if (json_cart != null)
             {
                  cart = JsonConvert.DeserializeObject<Cart>(json_cart);
+            }
+            if(User.Identity.IsAuthenticated)
+            {
+                var r = User.FindFirst(ClaimTypes.Name)?.Value;
+                var user = await _userManager.FindByNameAsync(r);
+             cart=   JsonConvert.DeserializeObject<Cart>(user.CartList);
+                HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+              await  HttpContext.Session.CommitAsync();
+
             }
             return View(cart);
         }
@@ -163,10 +236,11 @@ namespace NewShopApp.Controllers
                 }
                 catch(InvalidCastException e)
                 {
-                    
+
+                    return RedirectToAction("Error");
                 }
             }
-            return View();
+            //return View();
            
         }
 

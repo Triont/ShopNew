@@ -24,6 +24,9 @@ namespace CustomIdentityApp.Controllers
             _roleManager = roleManager;
             this.emailSendService = emailSendService;
         }
+
+
+   
         [HttpGet]
         public IActionResult Register()
         {
@@ -46,7 +49,8 @@ namespace CustomIdentityApp.Controllers
                     identityRole.NormalizedName = "ADMIN";
                     IdentityRole identity = new IdentityRole("User");
                 await    _roleManager.CreateAsync(identityRole);
-                      await _userManager.AddToRoleAsync(user, "Admin");
+                   // first admin user
+                    //await _userManager.AddToRoleAsync(user,identityRole.Name); 
 
 
                     var c = await _userManager.GenerateEmailConfirmationTokenAsync(user);

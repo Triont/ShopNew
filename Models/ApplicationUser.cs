@@ -9,5 +9,6 @@ namespace NewShopApp.Models
     public class ApplicationUser:IdentityUser
     {
     
+        public string CartList { get; set; }
     }
 }

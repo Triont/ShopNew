@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NewShopApp.Middlewares;
 
 namespace NewShopApp
 {
@@ -41,6 +42,7 @@ namespace NewShopApp
             services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationContext>().AddDefaultTokenProviders();
             services.AddTransient<EmailSendService>();
+            services.AddDbContext<OrderDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("ProductOrderConnection")));
             services.AddMvc().SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest).AddSessionStateTempDataProvider();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
 
@@ -69,14 +71,15 @@ namespace NewShopApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
+            
           
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
-          //  app.CreatePerOwinContext<SignInManager>(ApplicationSignInManager.Create);
-
+            //  app.CreatePerOwinContext<SignInManager>(ApplicationSignInManager.Create);
+            app.UseMiddleware<NewM>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
