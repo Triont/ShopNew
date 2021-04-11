@@ -49,6 +49,7 @@ namespace NewShopApp.Controllers
 
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> OrderCreate(OrderCreateViewModel orderCreateViewModel)
         {
             
@@ -66,7 +67,8 @@ namespace NewShopApp.Controllers
                         Email = orderCreateViewModel.Email,
                         Name = orderCreateViewModel.Name,
                         OrderItems = orderCreateViewModel.Items,
-                        SecondName = orderCreateViewModel.SecondName
+                        SecondName = orderCreateViewModel.SecondName,
+                        Status="Created"
 
                     };
 

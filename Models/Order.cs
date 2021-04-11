@@ -18,7 +18,8 @@ namespace NewShopApp.Models
         public string Country { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
-
+        public string Status { get; set; }
+        
         [Column(TypeName = "decimal(7, 2)")]
         public decimal TotalPrice { get; set; }
     }
@@ -27,6 +28,10 @@ namespace NewShopApp.Models
         public DbSet<Order> Orders { get; set; }
         public OrderDbContext(DbContextOptions<OrderDbContext> options)
         : base(options) { }
+
+    }
+    public enum StatusCode:int
+    {
 
     }
 }
