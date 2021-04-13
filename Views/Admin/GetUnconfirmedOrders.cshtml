@@ -1,5 +1,83 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@using NewShopApp.Models
+@using NewShopApp.ModelView
+@model List<Order>
 @{
 }
+<div>
+    
+<div class ="table">
+<div align="center">
+    @if(Model!=null)
+    {
+         <table class="table table-striped">
+              <thead>
+    <tr>
+    
+      <th scope="col">Id</th>
+      <th scope="col">Name</th>
+       <th scope="col">Phone</th>
+        <th scope="col">Email</th>
+        <th scope="col">TotalPrice</th>
+        <th scope="col">Status</th>
+        <th scope="col"></th>
+  
+    </tr>
+  </thead>
+        
+        @foreach(var i in Model)
+        {
+            
+          
+               <tr>
+                   
+                   <td> @i.Id</td>
+                   <td>
+                    
+                   @Html.ActionLink($"{i.Name}", "Show", "Item", new {id=i.Id})
+               
+               
+               </td>
+                 
+                      @if(@i.Quantity==0)
+                      {
+                         <td>
+                         Not available
+                          
+                       </td>   
+                      }
+                      else
+                      {
+                       <td>
+                           @i.Quantity
+                       </td>
+                            }
+
+                        <td>
+                            @i.Price
+                        </td>
+                            <td>
+                            
+                   @*   <img src="upload/@i.Key.Image" />*@
+                    <img class="img" src="/uploads/@Url.Content(i.Image)" height="64" width="64" />                    
+                      </td>
+                      <td>
+                          <form asp-controller="Item" asp-action="AddToCart">
+                               <input type="hidden" name="ProductId" value="@i.Id" />
+                              <input type="submit" value="Buy" />
+                          </form>
+                          @* <td>@Html.ActionLink("Buy", "AddToCart","Item", new {id=@i.Id})</td>*@
+                      </td>
+
+                
+               </tr>
+
+           
+                
+        }
+           </table>
+    }
+    </div>
+</div>

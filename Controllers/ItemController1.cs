@@ -71,7 +71,7 @@ namespace NewShopApp.Controllers
                         Status="Created"
 
                     };
-
+                  
                     await orderDbContext.AddAsync(order);
                     await orderDbContext.SaveChangesAsync();
                     if(User.Identity.IsAuthenticated)
@@ -83,7 +83,10 @@ namespace NewShopApp.Controllers
                     }
                     HttpContext.Session.SetString("Cart", String.Empty);
                 }
+              
             }
+
+           
             return RedirectToAction("Index", "Home");
            
         }
