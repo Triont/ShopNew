@@ -22,6 +22,8 @@ namespace NewShopApp.Models
         
         [Column(TypeName = "decimal(7, 2)")]
         public decimal TotalPrice { get; set; }
+
+        public DateTime CreateDateTime { get; set; }
     }
     public class OrderDbContext:DbContext
     {

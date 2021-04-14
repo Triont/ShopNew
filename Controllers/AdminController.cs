@@ -20,6 +20,8 @@ namespace NewShopApp.Controllers
             this.orderDbContext = orderDbContext;
         }
         // GET: AdminController
+        [Route("[controller]/Index")]
+        [Route("[controller]")]
         public ActionResult Index()
         {
             return View();
