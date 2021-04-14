@@ -1,13 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
-using System.Threading.Tasks;
 using NewShopApp.Models;
-using NewShopApp.ModelView;
+using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using NewShopApp.ModelView;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace NewShopApp.Controllers
 {
@@ -29,7 +36,12 @@ namespace NewShopApp.Controllers
 
         public async Task<IActionResult> GetUnconfirmedOrders()
         {
-            var all = await orderDbContext.Orders.Where(i => i.Status == "Created").ToListAsync();
+            var all = await orderDbContext.Orders.Where(i => i.Status == "Created" || i.Status == null).ToListAsync();
+            return View(all);
+        }
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var all = await orderDbContext.Orders.ToListAsync();
             return View(all);
         }
 
@@ -102,6 +114,50 @@ namespace NewShopApp.Controllers
             {
                 return View();
             }
+        }
+
+
+
+        public async Task<IActionResult> OrderConfirm(long id)
+        {
+            var order = await orderDbContext.Orders.FirstOrDefaultAsync(i => i.Id == id);
+            if (order != null)
+            {
+                order.Status = "Confirmed";
+                orderDbContext.Orders.Update(order);
+                await orderDbContext.SaveChangesAsync();
+                return RedirectToAction("GetUnconfirmedOrders");
+            }
+            return NotFound("No order with such id");
+        }
+
+
+        public async Task<IActionResult> RemoveOrder(long id)
+        {
+            var order = await orderDbContext.Orders.FirstOrDefaultAsync(i => i.Id == id);
+            if (order != null)
+            {
+
+                orderDbContext.Orders.Remove(order);
+                await orderDbContext.SaveChangesAsync();
+
+                return RedirectToAction("GetUnconfirmedOrders");
+            }
+            return NotFound("No order with such id");
+        }
+        public async Task<IActionResult> OrderDone(long id)
+        {
+            var order = await orderDbContext.Orders.FirstOrDefaultAsync(i => i.Id == id);
+            if ((order != null) && order.Status != "Done")
+            {
+                order.Status = "Done";
+                orderDbContext.Orders.Update(order);
+                await orderDbContext.SaveChangesAsync();
+
+                return RedirectToAction("GetUnconfirmedOrders");
+            }
+            return NotFound("No order with such id");
+
         }
     }
 }

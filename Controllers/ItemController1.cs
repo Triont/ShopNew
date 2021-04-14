@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using NewShopApp.Models;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,48 @@ namespace NewShopApp.Controllers
           
 
         }
+
+
+        //public async Task<IActionResult> OrderConfirm(long id)
+        //{
+        //    var order = await orderDbContext.Orders.FirstOrDefaultAsync(i => i.Id == id);
+        //    if(order!=null)
+        //    {
+        //        order.Status = "Confirmed";
+        //        orderDbContext.Orders.Update(order);
+        //        await orderDbContext.SaveChangesAsync();
+        //        return Ok(); 
+        //    }
+        //    return NotFoundError("No order with such id");
+        //}
+
+
+        //public async Task<IActionResult> RemoveOrder(long id)
+        //{
+        //    var order = await orderDbContext.Orders.FirstOrDefaultAsync(i => i.Id == id);
+        //    if (order != null)
+        //    {
+
+        //        orderDbContext.Orders.Remove(order);
+        //        await orderDbContext.SaveChangesAsync();
+        //        return Ok();
+        //    }
+        //    return NotFoundError("No order with such id");
+        //}
+        //public async Task<IActionResult> OrderDone(long id)
+        //{
+        //    var order = await orderDbContext.Orders.FirstOrDefaultAsync(i => i.Id == id);
+        //    if ((order != null) && order.Status!="Done" )
+        //    {
+        //        order.Status = "Done";
+        //        orderDbContext.Orders.Update(order);
+        //        await orderDbContext.SaveChangesAsync();
+        //        return Ok();
+        //    }
+        //    return NotFoundError("No order with such id");
+
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> OrderCreate(OrderCreateViewModel orderCreateViewModel)
@@ -68,7 +111,8 @@ namespace NewShopApp.Controllers
                         Name = orderCreateViewModel.Name,
                         OrderItems = orderCreateViewModel.Items,
                         SecondName = orderCreateViewModel.SecondName,
-                        Status="Created"
+                        Status="Created",
+                        CreateDateTime=DateTime.Now
 
                     };
                   

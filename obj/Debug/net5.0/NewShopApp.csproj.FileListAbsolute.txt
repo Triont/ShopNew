@@ -89,3 +89,5 @@ C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Ac
 C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Shared\NotFoundError.cshtml.g.cs
 C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Item\OrderCreate.cshtml.g.cs
 C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Admin\GetUnconfirmedOrders.cshtml.g.cs
+C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Admin\Index.cshtml.g.cs
+C:\Users\user\source\repos\NewShopApp\NewShopApp\obj\Debug\net5.0\Razor\Views\Admin\GetAllOrders.cshtml.g.cs
