@@ -15,6 +15,8 @@ using NewShopApp.ModelView;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using NewShopApp.Services;
+using System.Text;
 
 namespace NewShopApp.Controllers
 {
@@ -25,9 +27,11 @@ namespace NewShopApp.Controllers
         private readonly ApplicationContext applicationContext;
         private readonly OrderDbContext orderDbContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EmailSendService emailSendService;
         public ItemController(ApplicationContext applicationContext, UserManager<ApplicationUser> userManager,
-            OrderDbContext orderDbContext)
+            OrderDbContext orderDbContext, EmailSendService emailSendService)
         {
+            this.emailSendService = emailSendService;
             this.applicationContext = applicationContext;
             _userManager = userManager;
             this.orderDbContext = orderDbContext;
@@ -115,10 +119,22 @@ namespace NewShopApp.Controllers
                         CreateDateTime=DateTime.Now
 
                     };
-                  
+                    var items = JsonConvert.DeserializeObject <List<Product>>(order.OrderItems);
+                    StringBuilder stringBuilder = new StringBuilder(items[0].Name);
+                    
+                    for(int i=1;i<items.Count;i++)
+                    {
+                        stringBuilder.Append(" ");
+                        stringBuilder.Append(items[i].Name);
+                    }
+
                     await orderDbContext.AddAsync(order);
                     await orderDbContext.SaveChangesAsync();
-                    if(User.Identity.IsAuthenticated)
+                    
+                    await EmailSendService.SendEmailAsync(order.Email, "Order created", $"You created order on website {Request.Host.Value}. " +
+                        $"Number order is {order.Id} Items {stringBuilder}\n Price {order.TotalPrice}" +
+                        $"\n Manager will contact you shortly");
+                    if (User.Identity.IsAuthenticated)
                     {
                      var name=   User.FindFirst(ClaimTypes.Name)?.Value;
                         var user = await _userManager.FindByNameAsync(name);

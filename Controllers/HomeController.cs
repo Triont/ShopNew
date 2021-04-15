@@ -45,6 +45,7 @@ namespace NewShopApp.Controllers
             item1.Price = item.Price;
             item1.Description = item.Description;
             item1.Quantity = item.Quantity;
+            
             if (item.Image != null)
             {
                 var uniqueFileName = GetUniqueFileName(item.Image.FileName);
