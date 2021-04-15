@@ -8,13 +8,13 @@
 @using System.Globalization;
 @model ShowItemsModelView
 @{
-    List<string> str = JsonConvert.DeserializeObject<List<string>>( TempData["Categories"].ToString());
+   
 }
 <html>
     <body>
        <div>
            <form asp-action="CategorySelect" asp-controller="Item">
-             @foreach(var i in str)
+             @foreach(var i in Model.AllCategories)
              {
                  if(i!=null)
                  {

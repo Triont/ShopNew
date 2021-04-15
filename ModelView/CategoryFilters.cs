@@ -12,6 +12,7 @@ namespace NewShopApp.ModelView
     {
         public List<Product> Products { get; set; }
         public string Category { get; set; }
+        public List<string> AllCategories { get; set; }
       //  public List<string> Categories { get; set; }
         //private readonly ApplicationContext applicationContext;
         //public CategoryList(ApplicationContext applicationContext)

@@ -28,17 +28,14 @@ namespace NewShopApp.Controllers
 
         public IActionResult Index()
         {
-         //   var s = User.FindFirst(ClaimTypes.Email)?.Value;
+            //   var s = User.FindFirst(ClaimTypes.Email)?.Value;
+            return RedirectToAction("All", "Item");
             
-            return View();
         }
 
-      //  [Authorize(Roles ="Admin")]
-
-        public void d()
-        {
+      
+        [Authorize(Roles ="Admin")]
            
-        }
         public async Task<IActionResult> CreateItem(CreateItem item)
         {
 
@@ -47,6 +44,7 @@ namespace NewShopApp.Controllers
             item1.Category = item.Category;
             item1.Price = item.Price;
             item1.Description = item.Description;
+            item1.Quantity = item.Quantity;
             if (item.Image != null)
             {
                 var uniqueFileName = GetUniqueFileName(item.Image.FileName);

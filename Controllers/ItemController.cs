@@ -275,12 +275,20 @@ namespace NewShopApp.Controllers
         }
         public async Task<IActionResult> All()
         {
+            ShowItemsModelView showItemsModelView1 = new ShowItemsModelView();
+           if( TempData["Search"]!=null)
+            {
+              showItemsModelView1= JsonConvert.DeserializeObject<ShowItemsModelView>(  TempData["Search"].ToString());
+                showItemsModelView1.AllCategories = await applicationContext.Products.Select(i => i.Category).Distinct().ToListAsync();
+                return View(showItemsModelView1);
+            }
+
             ShowItemsModelView showItemsModelView = new ShowItemsModelView();
             var q = await applicationContext.Products.ToListAsync();
             showItemsModelView.Products = q;
             
-            var categories = q.Select(i => i.Category).Distinct().ToList();
-            TempData["Categories"] = JsonConvert.SerializeObject(categories);
+            showItemsModelView.AllCategories = q.Select(i => i.Category).Distinct().ToList();
+         
             if (TempData["SelectedCategory"] == null)
             {
                 //var q = await applicationContext.Products.ToListAsync();
@@ -320,6 +328,21 @@ namespace NewShopApp.Controllers
             TempData["SelectedCategory"] = JsonConvert.SerializeObject(tmp);
             return RedirectToAction("All");
 
+        }
+        public async Task<IActionResult> Search(string SearchData)
+        {
+            List<Product> products = new List<Product>();
+            var t = await applicationContext.Products.Where(i => i.Name.Contains(SearchData)).ToListAsync();
+            long check;
+            long.TryParse(SearchData, out check);
+            var q=await applicationContext.Products.Where(i=>i.Id==check).ToListAsync();
+            t.AddRange(q);
+            ShowItemsModelView showItemsModelView = new ShowItemsModelView()
+            {
+                Products = t
+            };
+         TempData["Search"]=   JsonConvert.SerializeObject(showItemsModelView);
+            return RedirectToAction("All");
         }
     }
 }
