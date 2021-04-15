@@ -8,12 +8,15 @@
 }
 <div>
 <div id="select">
-       <form >
+       <form asp-action="StatusFilter" asp-controller="Admin" method="post"  >
             
-                      <input  type="checkbox" value="Unconfirmed" />
-                       <input  type="checkbox" value="Confirmed" />
-                        <input  type="checkbox" value="Done" />
-                      <button id ="btnid" onclick="ajaxfunc()">Ajax</button>
+                      <input  type="checkbox" name="Filter0"  value="Unconfirmed" />
+                      <label>Unconfirmed</label> <br />
+                       <input  type="checkbox" name="Filter1" value="Confirmed" />
+                       <label>Confirmed</label><br />
+                        <input  type="checkbox" name="Filter2" value="Done" />
+                        <label>Done</label>
+                  <input type="submit" />
               
            
                </form>

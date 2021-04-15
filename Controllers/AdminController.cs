@@ -41,8 +41,24 @@ namespace NewShopApp.Controllers
         }
         public async Task<IActionResult> GetAllOrders()
         {
-            var all = await orderDbContext.Orders.ToListAsync();
-            return View(all);
+            if (TempData["Filtered"] != null)
+            {
+                try
+                {
+                    var temp = TempData["Filtered"].ToString();
+                    var tmp = JsonConvert.DeserializeObject<List<Order>>(temp);
+                    return View(tmp);
+                }
+                catch (InvalidCastException ex)
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                var all = await orderDbContext.Orders.ToListAsync();
+                return View(all);
+            }
         }
 
         [HttpGet]
@@ -181,6 +197,21 @@ namespace NewShopApp.Controllers
             }
             return NotFound("No order with such id");
 
+        }
+        public async Task<IActionResult> StatusFilter(string[] Filters)
+        {
+            List<Order> orders = new List<Order>();
+            for(int i=0;i<Filters.Length;i++)
+            {
+                if(Filters[i]!=null)
+                {
+                    var q = await orderDbContext.Orders.Where(pos => pos.Status == Filters[i]).ToListAsync();
+
+                    orders.AddRange(q);
+                }
+            }
+            TempData["Filtered"] = JsonConvert.SerializeObject(orders);
+            return RedirectToAction("GetAllOrders");
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NewShopApp.Middlewares;
+using System.Globalization;
 
 namespace NewShopApp
 {
@@ -21,6 +22,7 @@ namespace NewShopApp
     {
         public Startup(IConfiguration configuration)
         {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
             Configuration = configuration;
         }
 

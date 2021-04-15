@@ -3,19 +3,38 @@
 *@
 @using NewShopApp.Models;
 @using NewShopApp.ModelView;
+@using System.Globalization;
 @model NewShopApp.Models.Product;
 @{
 }
+<style>
+    .img_div
+    {
+
+        float:left;
+        width: 256px;
+    height: 256px;
+      margin-right: 65px;
+    }
+      .my_text
+            {
+                font-family:    Arial, Helvetica, sans-serif;
+                font-size:      20px;
+                font-weight:    italic;
+            }
+
+</style>
 <div>
 
-<div>
-             <img class="img" src="/uploads/@Url.Content(Model.Image)" height="256" width="256" />
+<div class="img_div">
+             <img src="/uploads/@Url.Content(Model.Image)" height="256" width="256" />
          </div>
-             
+    <div class="my_text">         
          @Model.Name
          <br />
          <label>Price</label>
-             @Model.Price
+          
+             @Model.Price.ToString("C", CultureInfo.CurrentCulture)
              <br />
              @if(Model.Quantity>0)
              {
@@ -24,11 +43,20 @@
                               <input type="submit" value="Buy" />
                           </form>
              }
+             else
+             {
+                  <p>
+                      Sorry, this item is not available now
+                  </p>
+             }
              <br />
-             @Model.Quantity
+              Count is:  @Model.Quantity
+             <br />
+             <p>Desription</p>
              <br />
              @Model.Description
              <br />
+            </div>
 
 
 </div>

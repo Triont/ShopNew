@@ -5,6 +5,7 @@
 @using NewShopApp.ModelView;
 @using Newtonsoft.Json;
 @using Newtonsoft;
+@using System.Globalization;
 @model ShowItemsModelView
 @{
     List<string> str = JsonConvert.DeserializeObject<List<string>>( TempData["Categories"].ToString());
@@ -73,7 +74,7 @@
                             }
 
                         <td>
-                            @i.Price
+                             @i.Price.ToString("C", CultureInfo.CurrentCulture)
                         </td>
                             <td>
                             
