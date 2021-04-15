@@ -7,7 +7,17 @@
 @{
 }
 <div>
-    
+<div id="select">
+       <form >
+            
+                      <input  type="checkbox" value="Unconfirmed" />
+                       <input  type="checkbox" value="Confirmed" />
+                        <input  type="checkbox" value="Done" />
+                      <button id ="btnid" onclick="ajaxfunc()">Ajax</button>
+              
+           
+               </form>
+               </div>
 <div class ="table">
 <div align="center">
     @if(Model!=null)
@@ -28,7 +38,7 @@
   
     </tr>
   </thead>
-        
+        <tbody id="refresh">
         @foreach(var i in Model)
         {
             
@@ -52,7 +62,84 @@
              </tr>
       
         }
+        </tbody>
            </table>
     }
     </div>
 </div>
+@section Scripts
+{
+       <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script type="text/javascript">
+        
+       $(document).ready(function () {
+    var myInterval = setInterval(function () {
+        getProgress();
+    }, 5000);
+});
+var test;
+function getProgress() {
+   
+
+    $.ajax({
+        type: "GET",      
+        url:'/Admin/GetAllOrdersJson' ,
+      
+  
+        success: function (response) {
+        
+       
+           var q_tb= document.getElementById("refresh");
+         $('#refresh').empty();
+      console.log(response);
+         for(var i=0; i<response.length;i++)
+
+         {
+             if(response[i].status=="Confirmed")
+             {
+            
+                   $('#refresh').append(`<tr><td>${response[i].id}</td><td>${response[i].name}</td><td>${response[i].secondName}</td>
+                <td>${response[i].phone}</td><td>${response[i].email}</td><td>${response[i].totalPrice}</td>
+                <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
+                <td><a href="/Admin/OrderDone/${response[i].id}">Done</a> </td>
+               </tr>`);
+               }
+               else if(response[i].status="Uncofirmed")
+               {
+                      $('#refresh').append(`<tr><td>${response[i].id}</td><td>${response[i].name}</td><td>${response[i].secondName}</td>
+                <td>${response[i].phone}</td><td>${response[i].email}</td><td>${response[i].totalPrice}</td>
+                <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
+                <td><a href="/Admin/OrderConfirm/${response[i].id}">Confirm</a>
+                <a href="/Admin/RemoveOrder/${response[i].id}">Remove</a>
+                </td>
+               </tr>`);
+               }
+               else if(response[i].status="Done")
+               {
+                      $('#refresh').append(`<tr><td>${response[i].id}</td><td>${response[i].name}</td><td>${response[i].secondName}</td>
+                <td>${response[i].phone}</td><td>${response[i].email}</td><td>${response[i].totalPrice}</td>
+                <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
+                <td><a href="/Admin/RemoveOrder/${response[i].id}">Remove</a> </td>
+               </tr>`);
+
+               }
+               console.log(response[i].id);
+               
+             
+         }
+   
+   
+
+            
+          
+        },
+        error: function () {
+           alert("error")   
+        }
+
+    });
+}
+
+    </script>
+ }
+  

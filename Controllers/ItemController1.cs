@@ -259,6 +259,13 @@ namespace NewShopApp.Controllers
                             string result = JsonConvert.SerializeObject(cart);
                             HttpContext.Session.SetString("Cart", result);
                             await HttpContext.Session.CommitAsync();
+                            if(User.Identity.IsAuthenticated)
+                        {
+                            var name = User.FindFirst(ClaimTypes.Name)?.Value;
+                            var curUser =await _userManager.FindByNameAsync(name);
+                            curUser.CartList = result;
+                            await _userManager.UpdateAsync(curUser);
+                        }
                         
                     }
                 }

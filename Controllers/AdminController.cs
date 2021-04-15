@@ -45,6 +45,29 @@ namespace NewShopApp.Controllers
             return View(all);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrdersJson()
+        {
+            var all = await orderDbContext.Orders.ToListAsync();
+            all.Sort((x, y) => DateTime.Compare(x.CreateDateTime, y.CreateDateTime));
+            all.Reverse();
+            return Json(all);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetJson(string value)
+        {
+            var s = JsonConvert.DeserializeObject<string[]>(value);
+            List<Order> temp = new List<Order>();
+            foreach(var t in s)
+            {
+                var ord = await orderDbContext.Orders.Where(i => i.Status == t).ToListAsync();
+                temp.AddRange(ord);
+            }
+            return Json(temp);
+          
+        }
+
 
 
         // GET: AdminController/Details/5
@@ -126,7 +149,7 @@ namespace NewShopApp.Controllers
                 order.Status = "Confirmed";
                 orderDbContext.Orders.Update(order);
                 await orderDbContext.SaveChangesAsync();
-                return RedirectToAction("GetUnconfirmedOrders");
+                return RedirectToAction("GetAllOrders");
             }
             return NotFound("No order with such id");
         }
@@ -141,7 +164,7 @@ namespace NewShopApp.Controllers
                 orderDbContext.Orders.Remove(order);
                 await orderDbContext.SaveChangesAsync();
 
-                return RedirectToAction("GetUnconfirmedOrders");
+                return RedirectToAction("GetAllOrders");
             }
             return NotFound("No order with such id");
         }
@@ -154,7 +177,7 @@ namespace NewShopApp.Controllers
                 orderDbContext.Orders.Update(order);
                 await orderDbContext.SaveChangesAsync();
 
-                return RedirectToAction("GetUnconfirmedOrders");
+                return RedirectToAction("GetAllOrders");
             }
             return NotFound("No order with such id");
 
