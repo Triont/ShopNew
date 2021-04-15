@@ -3,19 +3,26 @@
 *@
 @using NewShopApp.Models
 @using NewShopApp.ModelView
-@model List<Order>
+@model AdminGetAllOrdresModelView
 @{
 }
 <div>
 <div id="select">
        <form asp-action="StatusFilter" asp-controller="Admin" method="post"  >
             
-                      <input  type="checkbox" name="Filter0"  value="Unconfirmed" />
-                      <label>Unconfirmed</label> <br />
-                       <input  type="checkbox" name="Filter1" value="Confirmed" />
-                       <label>Confirmed</label><br />
-                        <input  type="checkbox" name="Filter2" value="Done" />
-                        <label>Done</label>
+                     
+
+                        @foreach(var i in Model.Statuses)
+                        {
+                            if(Model.StatusesChecked.Contains(i))
+                            {
+                            <input type="checkbox" value="@i" name="Filters" checked="checked" id="@i"> @i
+                            }
+                            else{
+                                 <input type="checkbox" value="@i" name="Filters" id="@i"> @i
+                            }
+                           
+                        }
                   <input type="submit" />
               
            
@@ -42,7 +49,7 @@
     </tr>
   </thead>
         <tbody id="refresh">
-        @foreach(var i in Model)
+        @foreach(var i in Model.Orders)
         {
             
           
@@ -95,9 +102,22 @@ function getProgress() {
            var q_tb= document.getElementById("refresh");
          $('#refresh').empty();
       console.log(response);
+    /*  var arr_check=[];
+      $('input[type=checkbox]').each(function () {
+            arr_check = (this.checked ? $(this).val() : "");
+});*/
+  var favorite = [];
+            $.each($("input[name='Filters']:checked"), function(){
+                favorite.push($(this).val());
+            });
+
          for(var i=0; i<response.length;i++)
 
-         {
+         { 
+            if( favorite.includes(`${response[i].status}`))
+              {
+              
+           
              if(response[i].status=="Confirmed")
              {
             
@@ -124,6 +144,42 @@ function getProgress() {
                 <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
                 <td><a href="/Admin/RemoveOrder/${response[i].id}">Remove</a> </td>
                </tr>`);
+
+               }
+               }
+
+               else if(favorite.length===0)
+               {
+
+                   
+             if(response[i].status=="Confirmed")
+             {
+            
+                   $('#refresh').append(`<tr><td>${response[i].id}</td><td>${response[i].name}</td><td>${response[i].secondName}</td>
+                <td>${response[i].phone}</td><td>${response[i].email}</td><td>${response[i].totalPrice}</td>
+                <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
+                <td><a href="/Admin/OrderDone/${response[i].id}">Done</a> </td>
+               </tr>`);
+               }
+               else if(response[i].status="Uncofirmed")
+               {
+                      $('#refresh').append(`<tr><td>${response[i].id}</td><td>${response[i].name}</td><td>${response[i].secondName}</td>
+                <td>${response[i].phone}</td><td>${response[i].email}</td><td>${response[i].totalPrice}</td>
+                <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
+                <td><a href="/Admin/OrderConfirm/${response[i].id}">Confirm</a>
+                <a href="/Admin/RemoveOrder/${response[i].id}">Remove</a>
+                </td>
+               </tr>`);
+               }
+               else if(response[i].status="Done")
+               {
+                      $('#refresh').append(`<tr><td>${response[i].id}</td><td>${response[i].name}</td><td>${response[i].secondName}</td>
+                <td>${response[i].phone}</td><td>${response[i].email}</td><td>${response[i].totalPrice}</td>
+                <td>${response[i].status}</td><td>${response[i].createDateTime}</td>
+                <td><a href="/Admin/RemoveOrder/${response[i].id}">Remove</a> </td>
+               </tr>`);
+
+               }
 
                }
                console.log(response[i].id);

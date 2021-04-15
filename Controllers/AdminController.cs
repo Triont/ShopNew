@@ -46,7 +46,9 @@ namespace NewShopApp.Controllers
                 try
                 {
                     var temp = TempData["Filtered"].ToString();
-                    var tmp = JsonConvert.DeserializeObject<List<Order>>(temp);
+                    var tmp = JsonConvert.DeserializeObject<AdminGetAllOrdresModelView>(temp);
+                    tmp.Statuses = await orderDbContext.Orders.Select(i => i.Status).Distinct().ToListAsync();
+                    
                     return View(tmp);
                 }
                 catch (InvalidCastException ex)
@@ -57,7 +59,14 @@ namespace NewShopApp.Controllers
             else
             {
                 var all = await orderDbContext.Orders.ToListAsync();
-                return View(all);
+                var s = await orderDbContext.Orders.Select(k => k.Status).Distinct().ToListAsync();
+                AdminGetAllOrdresModelView adminGetAllOrdresModelView = new AdminGetAllOrdresModelView()
+                {
+                    Orders = all,
+                    Statuses = s,
+                    StatusesChecked=new List<string>()
+                };
+                return View(adminGetAllOrdresModelView);
             }
         }
 
@@ -210,7 +219,14 @@ namespace NewShopApp.Controllers
                     orders.AddRange(q);
                 }
             }
-            TempData["Filtered"] = JsonConvert.SerializeObject(orders);
+            AdminGetAllOrdresModelView newAdminOrdersView = new AdminGetAllOrdresModelView
+            {
+
+                Orders=orders,
+                StatusesChecked=Filters.ToList()
+               
+            };
+            TempData["Filtered"] = JsonConvert.SerializeObject(newAdminOrdersView);
             return RedirectToAction("GetAllOrders");
         }
     }

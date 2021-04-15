@@ -9,6 +9,7 @@ namespace NewShopApp.ModelView
     public class AdminGetAllOrdresModelView
     {
         public List<Order> Orders { get; set; }
-        
+        public List<string> Statuses { get; set; }
+        public List<string> StatusesChecked { get; set; }
     }
 }
