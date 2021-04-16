@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @using NewShopApp.Models
 @using NewShopApp.ModelView
 @model AdminGetAllOrdresModelView
@@ -8,6 +6,7 @@
 }
 <div>
 <div id="select">
+
        <form asp-action="StatusFilter" asp-controller="Admin" method="post"  >
             
                      
@@ -102,19 +101,16 @@ function getProgress() {
            var q_tb= document.getElementById("refresh");
          $('#refresh').empty();
       console.log(response);
-    /*  var arr_check=[];
-      $('input[type=checkbox]').each(function () {
-            arr_check = (this.checked ? $(this).val() : "");
-});*/
-  var favorite = [];
+ 
+  var checked_values = [];
             $.each($("input[name='Filters']:checked"), function(){
-                favorite.push($(this).val());
+                checked_values.push($(this).val());
             });
 
          for(var i=0; i<response.length;i++)
 
          { 
-            if( favorite.includes(`${response[i].status}`))
+            if( checked_values.includes(`${response[i].status}`))
               {
               
            
@@ -148,7 +144,7 @@ function getProgress() {
                }
                }
 
-               else if(favorite.length===0)
+               else if(checked_values.length===0)
                {
 
                    
