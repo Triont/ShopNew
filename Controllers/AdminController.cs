@@ -15,6 +15,7 @@ using NewShopApp.ModelView;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace NewShopApp.Controllers
 {
@@ -22,9 +23,11 @@ namespace NewShopApp.Controllers
     public class AdminController : Controller
     {
         private readonly OrderDbContext orderDbContext;
-        public AdminController(OrderDbContext orderDbContext)
+        private readonly ILogger<AdminController> _logger;
+        public AdminController(OrderDbContext orderDbContext, ILogger<AdminController> logger)
         {
             this.orderDbContext = orderDbContext;
+            this._logger = logger;
         }
         // GET: AdminController
         [Route("[controller]/Index")]
@@ -53,6 +56,7 @@ namespace NewShopApp.Controllers
                 }
                 catch (InvalidCastException ex)
                 {
+                    _logger.LogError($"{ex.Message} {ex.Data} {ex.StackTrace} {ex.Source} ");
                     return View();
                 }
             }

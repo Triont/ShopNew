@@ -79,7 +79,7 @@ namespace NewShopApp.Controllers
             fileName = Path.GetFileName(fileName);
             return Path.GetFileNameWithoutExtension(fileName)
                       + "_"
-                      + Guid.NewGuid().ToString().Substring(0, 4)
+                      + Guid.NewGuid().ToString().Substring(0, 10)
                       + Path.GetExtension(fileName);
         }
 

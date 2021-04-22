@@ -82,6 +82,8 @@ namespace NewShopApp
             app.UseAuthorization();
             //  app.CreatePerOwinContext<SignInManager>(ApplicationSignInManager.Create);
             app.UseMiddleware<NewM>();
+          
+           
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
