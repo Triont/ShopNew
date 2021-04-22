@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using NewShopApp.Services;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace NewShopApp.Controllers
 {
@@ -26,15 +27,18 @@ namespace NewShopApp.Controllers
     {
         private readonly ApplicationContext applicationContext;
         private readonly OrderDbContext orderDbContext;
+        private readonly ILogger<ItemController> logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly EmailSendService emailSendService;
         public ItemController(ApplicationContext applicationContext, UserManager<ApplicationUser> userManager,
-            OrderDbContext orderDbContext, EmailSendService emailSendService)
+            OrderDbContext orderDbContext, EmailSendService emailSendService
+            , ILogger<ItemController> logger)
         {
             this.emailSendService = emailSendService;
             this.applicationContext = applicationContext;
             _userManager = userManager;
             this.orderDbContext = orderDbContext;
+            this.logger = logger;
         }
        [HttpGet]
         public IActionResult  OrderCreate()
@@ -323,7 +327,8 @@ namespace NewShopApp.Controllers
                 }
                 catch(InvalidCastException e)
                 {
-
+                    logger.LogError($"{e.Message} {e.Source} {e.Data}");
+                    
                     return RedirectToAction("Error");
                 }
             }
