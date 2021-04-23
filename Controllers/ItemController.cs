@@ -321,6 +321,9 @@ namespace NewShopApp.Controllers
                 try
                 {
                     var zzz = TempData["SelectedCategory"].ToString();
+                   
+
+
                     var tmp = JsonConvert.DeserializeObject < List<Product>>(zzz);
                     showItemsModelView.Products = tmp;
                     return View(showItemsModelView);
@@ -345,6 +348,12 @@ namespace NewShopApp.Controllers
                 var lst = q.Select((i => i)).Where(k => k.Category == iq).ToList();
                 tmp.AddRange(lst);
                
+            }
+            if(Categories.Contains("All"))
+            {
+                TempData["SelectedCategory"] = JsonConvert.SerializeObject(q);
+                TempData["AllSelected"] = true;
+                return RedirectToAction("All");
             }
             TempData["SelectedCategory"] = JsonConvert.SerializeObject(tmp);
             return RedirectToAction("All");
