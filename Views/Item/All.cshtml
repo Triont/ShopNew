@@ -25,6 +25,8 @@
           
  
              }
+             <label asp-for="Category">All</label>
+              <input asp-for="Category" name="Categories" type="checkbox" value="All" />
                <input type="submit" value="Confirm">
                </form>
        </div> 
@@ -38,6 +40,7 @@
     
       <th scope="col">Id</th>
       <th scope="col">Name</th>
+      <th scope="col">Category</th>
        <th scope="col">Count</th>
         <th scope="col">Price</th>
         <th scope="col">Image</th>
@@ -57,6 +60,16 @@
                    @Html.ActionLink($"{i.Name}", "Show", "Item", new {id=i.Id})
                
                
+               </td>
+               <td>
+                                @if (i.Category != null)
+                                {
+                                    @i.Category
+                                  }
+                                else
+                                {
+                                    <p>No data</p>
+                                }
                </td>
                  
                       @if(@i.Quantity==0)
